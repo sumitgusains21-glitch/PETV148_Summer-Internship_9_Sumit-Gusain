@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Password Policy Compliance Auditor</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="background-grid"></div>
+
+<div class="container">
+
+    <!-- ========================================================= -->
+    <!-- LOGO -->
+    <!-- ========================================================= -->
+
+    <div class="logo">
+        <i class="fa-solid fa-shield-halved"></i>
+    </div>
+
+    <h1>Password Policy Compliance Auditor</h1>
+
+    <p class="subtitle">
+        Analyze password strength using
+        <strong>NIST SP 800-63B</strong> &
+        <strong>OWASP Password Guidelines</strong>
+    </p>
+
+    <!-- ========================================================= -->
+    <!-- ERROR MESSAGE -->
+    <!-- ========================================================= -->
+
+    {% if error %}
+
+    <div class="error-box">
+
+        <i class="fa-solid fa-circle-exclamation"></i>
+
+        {{ error }}
+
+    </div>
+
+    {% endif %}
+
+    <!-- ========================================================= -->
+    <!-- FORM -->
+    <!-- ========================================================= -->
+
+    <form id="auditForm" action="/analyze" method="POST">
+
+        <label>
+
+            <i class="fa-solid fa-user"></i>
+
+            Username
+
+        </label>
+
+        <input
+            type="text"
+            name="username"
+            placeholder="Enter Username"
+            autocomplete="off"
+            required>
+
+        <label>
+
+            <i class="fa-solid fa-lock"></i>
+
+            Password
+
+        </label>
+
+        <div class="password-box">
+
+            <input
+                id="password"
+                type="password"
+                name="password"
+                placeholder="Enter Password"
+                autocomplete="off"
+                required>
+
+            <span id="togglePassword">
+
+                <i class="fa-solid fa-eye"></i>
+
+            </span>
+
+        </div>
+
+        <!-- ========================================================= -->
+        <!-- PASSWORD STRENGTH -->
+        <!-- ========================================================= -->
+
+        <div class="strength-container">
+
+            <div id="strengthBar"></div>
+
+        </div>
+
+        <p id="strengthText">
+
+            Start typing...
+
+        </p>
+
+        <!-- ========================================================= -->
+        <!-- PASSWORD CHECKLIST -->
+        <!-- ========================================================= -->
+
+        <div class="checklist">
+
+            <h3>
+
+                <i class="fa-solid fa-list-check"></i>
+
+                Password Checklist
+
+            </h3>
+
+            <p id="lengthCheck">❌ Minimum 8 Characters</p>
+
+            <p id="upperCheck">❌ Uppercase Letter</p>
+
+            <p id="lowerCheck">❌ Lowercase Letter</p>
+
+            <p id="digitCheck">❌ Numeric Digit</p>
+
+            <p id="specialCheck">❌ Special Character</p>
+
+        </div>
+
+        <!-- ========================================================= -->
+        <!-- BUTTON -->
+        <!-- ========================================================= -->
+
+        <button id="analyzeBtn" type="submit">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            Analyze Password
+
+        </button>
+
+    </form>
+
+    <!-- ========================================================= -->
+    <!-- FEATURES -->
+    <!-- ========================================================= -->
+
+    <h2 class="section-title">
+
+        <i class="fa-solid fa-shield-virus"></i>
+
+        Security Features
+
+    </h2>
+
+    <div class="features">
+
+        <div class="feature-card">
+
+            <i class="fa-solid fa-shield-halved"></i>
+
+            <h4>NIST SP 800-63B</h4>
+
+            <p>
+                Evaluates password length and checks against common password lists
+                following modern NIST recommendations.
+            </p>
+
+        </div>
+
+        <div class="feature-card">
+
+            <i class="fa-solid fa-user-shield"></i>
+
+            <h4>OWASP Guidelines</h4>
+
+            <p>
+                Verifies password complexity using OWASP Password Storage and
+                Authentication best practices.
+            </p>
+
+        </div>
+
+        <div class="feature-card">
+
+            <i class="fa-solid fa-database"></i>
+
+            <h4>Common Password Detection</h4>
+
+            <p>
+                Compares the entered password against a database of commonly used
+                passwords to detect weak credentials.
+            </p>
+
+        </div>
+
+        <div class="feature-card">
+
+            <i class="fa-solid fa-fingerprint"></i>
+
+            <h4>bcrypt Security</h4>
+
+            <p>
+                Passwords are never stored in plain text. Secure bcrypt hashing is
+                used before logging audit information.
+            </p>
+
+        </div>
+
+        <div class="feature-card">
+
+            <i class="fa-solid fa-chart-line"></i>
+
+            <h4>Security Score</h4>
+
+            <p>
+                Calculates an overall compliance score out of 100 based on multiple
+                password quality parameters.
+            </p>
+
+        </div>
+
+        <div class="feature-card">
+
+            <i class="fa-solid fa-file-shield"></i>
+
+            <h4>Audit Logging</h4>
+
+            <p>
+                Every audit is securely recorded inside the SQLite audit_logs table
+                for future analysis.
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- PROJECT INFO -->
+    <!-- ========================================================= -->
+
+    <div class="project-info">
+
+        <h3>
+
+            <i class="fa-solid fa-circle-info"></i>
+
+            About This Project
+
+        </h3>
+
+        <p>
+
+            This Password Policy Compliance Auditor is a Cybersecurity
+            Project developed using Python, Flask, SQLite and bcrypt. It evaluates
+            passwords against industry-recognized standards including
+            <strong>NIST SP 800-63B</strong> and
+            <strong>OWASP Password Guidelines</strong>, providing users with a
+            detailed security assessment and actionable recommendations.
+
+        </p>
+
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- FOOTER -->
+    <!-- ========================================================= -->
+
+    <footer>
+
+        <hr>
+
+        <p>
+
+            Password Policy Compliance Auditor
+
+        </p>
+
+        <p>
+
+            Python • Flask • SQLite • bcrypt
+
+        </p>
+
+        <p>
+
+            NIST SP 800-63B • OWASP Password Guidelines
+
+        </p>
+
+        <p>
+
+            Final Year Project | Cybersecurity
+
+        </p>
+
+    </footer>
+
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+
+</html>

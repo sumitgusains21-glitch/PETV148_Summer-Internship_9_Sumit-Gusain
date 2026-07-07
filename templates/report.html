@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Password Security Report</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="background-grid"></div>
+
+<div class="container">
+
+    <!-- ========================================= -->
+    <!-- LOGO -->
+    <!-- ========================================= -->
+
+    <div class="logo">
+
+        <i class="fa-solid fa-shield-halved"></i>
+
+    </div>
+
+    <h1>Password Security Audit Report</h1>
+
+    <p class="subtitle">
+
+        Password Policy Compliance Auditor
+
+        <br>
+
+        NIST SP 800-63B • OWASP Password Guidelines
+
+    </p>
+
+    <!-- ========================================= -->
+    <!-- OVERALL RESULT -->
+    <!-- ========================================= -->
+
+    <div class="score-card">
+
+        <h2>Overall Assessment</h2>
+
+        <div class="score-number">
+
+            {{ result.score }}/100
+
+        </div>
+
+        {% if result.result=="PASS" %}
+
+            <span class="status good">
+
+                <i class="fa-solid fa-circle-check"></i>
+
+                PASS
+
+            </span>
+
+        {% elif result.result=="WARNING" %}
+
+            <span class="status warning">
+
+                <i class="fa-solid fa-triangle-exclamation"></i>
+
+                WARNING
+
+            </span>
+
+        {% else %}
+
+            <span class="status bad">
+
+                <i class="fa-solid fa-circle-xmark"></i>
+
+                FAIL
+
+            </span>
+
+        {% endif %}
+
+        <br><br>
+
+        <h3>
+
+            Security Rating
+
+        </h3>
+
+        <p>
+
+            {{ result.security_rating }}
+
+        </p>
+
+    </div>
+
+    <!-- ========================================= -->
+    <!-- USER INFORMATION -->
+    <!-- ========================================= -->
+
+    <h2 class="section-title">
+
+        <i class="fa-solid fa-user"></i>
+
+        User Information
+
+    </h2>
+
+    <div class="cards">
+
+        <div class="card">
+
+            <i class="fa-solid fa-user"></i>
+
+            <h3>Username</h3>
+
+            <p>
+
+                {{ result.username }}
+
+            </p>
+
+        </div>
+
+        <div class="card">
+
+            <i class="fa-solid fa-ruler"></i>
+
+            <h3>Password Length</h3>
+
+            <p>
+
+                {{ result.length }} Characters
+
+            </p>
+
+        </div>
+
+        <div class="card">
+
+            <i class="fa-solid fa-clock"></i>
+
+            <h3>Estimated Crack Time</h3>
+
+            <p>
+
+                {{ result.estimated_crack_time }}
+
+            </p>
+
+        </div>
+
+        <div class="card">
+
+            <i class="fa-solid fa-brain"></i>
+
+            <h3>Password Entropy</h3>
+
+            <p>
+
+                {{ result.entropy }} bits
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- ========================================= -->
+    <!-- PASSWORD CHARACTERISTICS -->
+    <!-- ========================================= -->
+
+    <h2 class="section-title">
+
+        <i class="fa-solid fa-lock"></i>
+
+        Password Characteristics
+
+    </h2>
+
+    <div class="cards">
+
+        <div class="card">
+
+            <h3>Uppercase Letter</h3>
+
+            {% if result.has_uppercase %}
+                <span class="good">✔ Present</span>
+            {% else %}
+                <span class="bad">✖ Missing</span>
+            {% endif %}
+
+        </div>
+
+        <div class="card">
+
+            <h3>Lowercase Letter</h3>
+
+            {% if result.has_lowercase %}
+                <span class="good">✔ Present</span>
+            {% else %}
+                <span class="bad">✖ Missing</span>
+            {% endif %}
+
+        </div>
+
+        <div class="card">
+
+            <h3>Numeric Digit</h3>
+
+            {% if result.has_digit %}
+                <span class="good">✔ Present</span>
+            {% else %}
+                <span class="bad">✖ Missing</span>
+            {% endif %}
+
+        </div>
+
+        <div class="card">
+
+            <h3>Special Character</h3>
+
+            {% if result.has_special %}
+                <span class="good">✔ Present</span>
+            {% else %}
+                <span class="bad">✖ Missing</span>
+            {% endif %}
+
+        </div>
+
+        <div class="card">
+
+            <h3>Common Password</h3>
+
+            {% if result.is_common %}
+                <span class="bad">✖ Found</span>
+            {% else %}
+                <span class="good">✔ Not Found</span>
+            {% endif %}
+
+        </div>
+
+        <div class="card">
+
+            <h3>SQL Injection Payload</h3>
+
+            {% if result.sql_injection_detected %}
+                <span class="bad">⚠ Detected</span>
+            {% else %}
+                <span class="good">✔ Not Detected</span>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <!-- ========================================= -->
+    <!-- COMPLIANCE -->
+    <!-- ========================================= -->
+
+    <h2 class="section-title">
+
+        <i class="fa-solid fa-shield-halved"></i>
+
+        Security Compliance
+
+    </h2>
+
+    <div class="cards">
+
+        <div class="card">
+
+            <h3>NIST SP 800-63B</h3>
+
+            {% if result.nist_compliant %}
+
+                <span class="good">
+
+                    ✔ Compliant
+
+                </span>
+
+            {% else %}
+
+                <span class="bad">
+
+                    ✖ Non-Compliant
+
+                </span>
+
+            {% endif %}
+
+        </div>
+
+        <div class="card">
+
+            <h3>OWASP Password Guidelines</h3>
+
+            {% if result.owasp_compliant %}
+
+                <span class="good">
+
+                    ✔ Compliant
+
+                </span>
+
+            {% else %}
+
+                <span class="bad">
+
+                    ✖ Non-Compliant
+
+                </span>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+	    <!-- ========================================= -->
+    <!-- SQL INJECTION ASSESSMENT -->
+    <!-- ========================================= -->
+
+    <h2 class="section-title">
+
+        <i class="fa-solid fa-user-secret"></i>
+
+        SQL Injection Assessment
+
+    </h2>
+
+    <div class="recommendation-box">
+
+        {% if result.sql_injection_detected %}
+
+            <p class="bad">
+
+                <strong>
+
+                    SQL Injection style payload detected.
+
+                </strong>
+
+            </p>
+
+            <p>
+
+                {{ result.security_observation }}
+
+            </p>
+
+        {% else %}
+
+            <p class="good">
+
+                ✔ No SQL Injection indicators were detected.
+
+            </p>
+
+        {% endif %}
+
+    </div>
+
+    <!-- ========================================= -->
+    <!-- SECURITY FINDINGS -->
+    <!-- ========================================= -->
+
+    <h2 class="section-title">
+
+        <i class="fa-solid fa-triangle-exclamation"></i>
+
+        Security Findings
+
+    </h2>
+
+    <div class="recommendation-box">
+
+        <ul>
+
+            {% for remark in result.remarks %}
+
+                <li>{{ remark }}</li>
+
+            {% endfor %}
+
+        </ul>
+
+    </div>
+
+    <!-- ========================================= -->
+    <!-- RECOMMENDATIONS -->
+    <!-- ========================================= -->
+
+    <h2 class="section-title">
+
+        <i class="fa-solid fa-lightbulb"></i>
+
+        Recommendations
+
+    </h2>
+
+    <div class="recommendation-box">
+
+        <ul>
+
+            {% for recommendation in result.recommendations %}
+
+                <li>{{ recommendation }}</li>
+
+            {% endfor %}
+
+        </ul>
+
+    </div>
+
+    <!-- ========================================= -->
+    <!-- COMPLIANCE SUMMARY -->
+    <!-- ========================================= -->
+
+    <h2 class="section-title">
+
+        <i class="fa-solid fa-clipboard-check"></i>
+
+        Compliance Summary
+
+    </h2>
+
+    <div class="cards">
+
+        <div class="card">
+
+            <h3>NIST SP 800-63B</h3>
+
+            {% if result.nist_compliant %}
+
+                <span class="good">
+
+                    ✔ Passed
+
+                </span>
+
+            {% else %}
+
+                <span class="bad">
+
+                    ✖ Failed
+
+                </span>
+
+            {% endif %}
+
+        </div>
+
+        <div class="card">
+
+            <h3>OWASP</h3>
+
+            {% if result.owasp_compliant %}
+
+                <span class="good">
+
+                    ✔ Passed
+
+                </span>
+
+            {% else %}
+
+                <span class="bad">
+
+                    ✖ Failed
+
+                </span>
+
+            {% endif %}
+
+        </div>
+
+        <div class="card">
+
+            <h3>Overall Result</h3>
+
+            {% if result.result=="PASS" %}
+
+                <span class="good">
+
+                    PASS
+
+                </span>
+
+            {% elif result.result=="WARNING" %}
+
+                <span class="warning">
+
+                    WARNING
+
+                </span>
+
+            {% else %}
+
+                <span class="bad">
+
+                    FAIL
+
+                </span>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <!-- ========================================= -->
+    <!-- BUTTONS -->
+    <!-- ========================================= -->
+
+    <div class="buttons">
+
+        <a href="/"
+           class="btn secondary-btn">
+
+            <i class="fa-solid fa-arrow-left"></i>
+
+            Analyze Another Password
+
+        </a>
+
+        <button
+            class="btn primary-btn"
+            onclick="window.print()">
+
+            <i class="fa-solid fa-download"></i>
+
+            Download Report
+
+        </button>
+
+    </div>
+
+    <!-- ========================================= -->
+    <!-- FOOTER -->
+    <!-- ========================================= -->
+
+    <footer>
+
+        <hr>
+
+        <br>
+
+        <strong>
+
+            Password Policy Compliance Auditor
+
+        </strong>
+
+        <br><br>
+
+        Developed using
+
+        <br>
+
+        Python • Flask • SQLite • bcrypt
+
+        <br><br>
+
+        Based on
+
+        <br>
+
+        NIST SP 800-63B
+
+        <br>
+
+        OWASP Password Guidelines
+
+    </footer>
+
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+
+</html>
